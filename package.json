@@ -1,0 +1,54 @@
+{
+  "name": "webix-jet-app",
+  "version": "1.2.0",
+  "description": "Webix Jet App",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "main": "sources/myapp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint sources",
+    "build": "webpack --env.production true",
+    "module": "webpack --env.production true --env.module true",
+    "precommit": "lint-staged",
+    "standalone": "webpack --env.production true --env.module true --env.standalone true",
+    "start": "webpack-dev-server --open"
+  },
+  "keywords": [
+    "webix",
+    "jet"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.4.2",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-xbsoftware": "git+https://bitbucket.org/xbsltd/eslint.git",
+    "file-loader": "^5.1.0",
+    "husky": "^4.2.3",
+    "less": "^3.11.1",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^10.0.8",
+    "mini-css-extract-plugin": "^0.9.0",
+    "url-loader": "^3.0.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "webix-jet": "^2.1.2"
+  }
+}
