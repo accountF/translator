@@ -1,0 +1,98 @@
+import {JetView} from "webix-jet";
+
+export default class Test extends JetView {
+	config() {
+		return {
+			cols: [
+				{
+					rows: [
+						{view: "template", template: "Select group please", type: "header"},
+						{
+							view: "list",
+							localId: "groupList",
+							select: true,
+							template: group => `${group.groupName}`
+						},
+						{
+							view: "form",
+							localId: "testForm",
+							hidden: true,
+							elements: [
+								{name: "wordInRussian", view: "label", localId: "russianWord"},
+								{name: "version0", view: "button", click: (id) => this.clickOnTest(id)},
+								{name: "version1", view: "button", click: (id) => this.clickOnTest(id)},
+								{name: "version2", view: "button", click: (id) => this.clickOnTest(id)},
+								{name: "version3", view: "button", click: (id) => this.clickOnTest(id)}
+
+							]
+						},
+						{
+							view: "template",
+							localId: "endOfTest",
+							template: "Test Completed! #point# points!",
+							type: "header",
+							hidden: true
+						},
+					]
+				}
+			]
+		}
+	}
+
+	init() {
+		this.listComponent = this.$$("groupList");
+		this.formComponent = this.$$("testForm");
+		this.templateComponent = this.$$("endOfTest");
+		this.listComponent.load("http://localhost:3000/wordGroups");
+		this.listComponent.attachEvent("onAfterSelect", (id) => {
+			this.click = 0;
+			this.testResult = [];
+			this.formComponent.show();
+			this.templateComponent.hide();
+			this.formComponent.clear();
+			webix.ajax().get(`http://localhost:3000/wordsForTest/${id}`).then((data) => {
+				this.dataForForm = data.json();
+				console.log("this.dataForForm", this.dataForForm);
+				this.formComponent.setValues(this.dataForForm[0]);
+			});
+		});
+
+		this.app.attachEvent("onShowNext", (currentPressing, testResult) => {
+			if (currentPressing < this.dataForForm.length) {
+				this.formComponent.setValues(this.dataForForm[currentPressing]);
+			} else {
+				this.formComponent.hide();
+				this.templateComponent.show();
+				console.log("result", testResult);
+				let selectedGroupId = this.listComponent.getSelectedId();
+				webix.ajax().post(`http://localhost:3000/getResult`, {testResult: testResult, groupId: selectedGroupId}).then((point) => {
+					let pointForClient = point.json();
+					this.templateComponent.parse(pointForClient);
+					let currentDate = new Date().toISOString().slice(0, 10);
+					let resutTestForServer = {
+						result: pointForClient.point,
+						date: currentDate,
+						wordGroup: selectedGroupId
+					};
+					webix.ajax().post("http://localhost:3000/setResult", resutTestForServer).then((result) => {
+						console.log(result);
+					});
+				});
+			}
+		})
+	}
+
+	clickOnTest(id) {
+		let englishWord = this.$$(id).getValue();
+		let russianWord = this.$$("russianWord").getValue();
+		let result = {
+			wordInRussian: russianWord,
+			wordInEnglish: englishWord
+		};
+		this.testResult.push(result);
+		//console.log(this.testResult);
+		this.click += 1;
+		console.log("click", this.click);
+		this.app.callEvent("onShowNext", [this.click, this.testResult]);
+	}
+};

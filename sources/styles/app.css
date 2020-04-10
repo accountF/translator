@@ -14,3 +14,8 @@
     font-size: 20px;
     vertical-align: middle;
 }
+
+.user-login {
+    text-align: right;
+    margin-top: 8px !important;
+}
