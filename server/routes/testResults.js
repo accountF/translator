@@ -23,7 +23,6 @@ router.get("/results", (req, res) => {
 			}
 		}
 	]).then((testResults) => {
-		console.log(testResults);
 		testResults.map((testResult, index) => {
 			testResult.ordinalNumber = index + 1;
 		});

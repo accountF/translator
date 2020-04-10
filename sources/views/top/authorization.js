@@ -67,9 +67,9 @@ export default class Authorization extends JetView {
 
 	signIn(userData) {
 		webix.ajax().post("http://localhost:3000/signIn", userData).then((data) => {
-			let result = data.text();
+			let result = data.json();
 			if (result) {
-				webix.message(`${result} success`);
+				webix.message(`${result.userLogin} success`);
 				this.closeWindow();
 				this.app.callEvent("onUserLogIn", [result]);
 			}

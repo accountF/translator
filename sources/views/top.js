@@ -58,11 +58,11 @@ export default class TopView extends JetView {
 
 		this.window = this.ui(authorization);
 
-		this.on(this.app, "onUserLogIn", (login) => {
-			if (login) {
+		this.on(this.app, "onUserLogIn", (userInfo) => {
+			if (userInfo) {
 				this.$$("inOrUp").hide();
 				this.$$("out").show();
-				this.$$("userLogin").setValues({login});
+				this.$$("userLogin").setValues({login: userInfo.userLogin});
 			}
 		});
 	}
