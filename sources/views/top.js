@@ -17,15 +17,15 @@ export default class TopView extends JetView {
 							localId: "inOrUp",
 							cols: [
 								{view: "button", label: "Sign in", width: 150, css: "webix_primary", click: () => this.signIn()},
-								{view: "button", label: "Sign up", width: 150, css: "webix_primary", click: () => this.signUp()},
-								]
+								{view: "button", label: "Sign up", width: 150, css: "webix_primary", click: () => this.signUp()}
+							]
 						},
 						{
 							localId: "out",
 							hidden: true,
 							cols: [
 								{localId: "userLogin", template: "User login: #login#", css: "user-login", borderless: true},
-								{view: "button", label: "Log out", width: 150, css: "webix_primary", click: () => this.logOut()},
+								{view: "button", label: "Log out", width: 150, css: "webix_primary", click: () => this.logOut()}
 
 							]
 						}
@@ -39,7 +39,7 @@ export default class TopView extends JetView {
 							data: [
 								{id: "words", icon: "mdi mdi-table-edit", value: "Words"},
 								{id: "test", icon: "mdi mdi-clipboard-text-outline", value: "Test"},
-								{id: "testResult", icon: "mdi mdi-table-large", value: "Test result"},
+								{id: "testResult", icon: "mdi mdi-table-large", value: "Test result"}
 							]
 						},
 						{$subview: true}
@@ -62,7 +62,7 @@ export default class TopView extends JetView {
 			if (login) {
 				this.$$("inOrUp").hide();
 				this.$$("out").show();
-				this.$$("userLogin").setValues({login: login});
+				this.$$("userLogin").setValues({login});
 			}
 		});
 	}

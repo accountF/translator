@@ -27,10 +27,10 @@ export default class Authorization extends JetView {
 					{view: "text", localId: "repeatedPassword", label: "Repeat password", name: "repeatedPassword", labelWidth: 150, invalidMessage: "Repeated password can not be empty"},
 					{view: "button", localId: "formButton", value: "Sign in", click: () => this.signInOrSignUp()}
 				],
-				rules:{
-					"login": webix.rules.isNotEmpty,
-					"password": webix.rules.isNotEmpty,
-					"repeatedPassword": webix.rules.isNotEmpty
+				rules: {
+					login: webix.rules.isNotEmpty,
+					password: webix.rules.isNotEmpty,
+					repeatedPassword: webix.rules.isNotEmpty
 				}
 			}
 		};
@@ -72,20 +72,22 @@ export default class Authorization extends JetView {
 				webix.message(`${result} success`);
 				this.closeWindow();
 				this.app.callEvent("onUserLogIn", [result]);
-			} else {
+			}
+			else {
 				webix.message("Sign up please or check your data");
 			}
 		});
 	}
 
 	signUp(userData) {
-		if (userData.password === userData.repeatedPassword){
+		if (userData.password === userData.repeatedPassword) {
 			webix.ajax().post("http://localhost:3000/signUp", userData).then((data) => {
 				let result = data.text();
 				if (result) {
 					webix.message(`${result} successful log up`);
 					this.closeWindow();
-				} else {
+				}
+				else {
 					webix.message("User existed");
 				}
 			});
@@ -99,9 +101,8 @@ export default class Authorization extends JetView {
 				this.signIn(userData);
 			}
 			else if (userData.formType === "Sign up") {
-				this.signUp(userData)
+				this.signUp(userData);
 			}
 		}
-
 	}
 }

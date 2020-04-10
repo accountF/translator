@@ -1,6 +1,6 @@
 import {JetView} from "webix-jet";
 
-export default class TestResult extends JetView{
+export default class TestResult extends JetView {
 	config() {
 		return {
 			view: "datatable",
@@ -11,11 +11,11 @@ export default class TestResult extends JetView{
 				{id: "groupName", header: "Word groups", fillspace: true},
 				{id: "date", header: "Date", format: webix.i18n.longDateFormatStr, minWidth: 200}
 			]
-		}
+		};
 	}
 
 	init() {
 		this.tableComponent = this.$$("resultTable");
 		this.tableComponent.load("http://localhost:3000/results");
 	}
-};
+}

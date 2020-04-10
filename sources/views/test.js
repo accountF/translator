@@ -19,10 +19,10 @@ export default class Test extends JetView {
 							hidden: true,
 							elements: [
 								{name: "wordInRussian", view: "label", localId: "russianWord"},
-								{name: "version0", view: "button", click: (id) => this.clickOnTest(id)},
-								{name: "version1", view: "button", click: (id) => this.clickOnTest(id)},
-								{name: "version2", view: "button", click: (id) => this.clickOnTest(id)},
-								{name: "version3", view: "button", click: (id) => this.clickOnTest(id)}
+								{name: "version0", view: "button", click: id => this.clickOnTest(id)},
+								{name: "version1", view: "button", click: id => this.clickOnTest(id)},
+								{name: "version2", view: "button", click: id => this.clickOnTest(id)},
+								{name: "version3", view: "button", click: id => this.clickOnTest(id)}
 
 							]
 						},
@@ -32,11 +32,11 @@ export default class Test extends JetView {
 							template: "Test Completed! #point# points!",
 							type: "header",
 							hidden: true
-						},
+						}
 					]
 				}
 			]
-		}
+		};
 	}
 
 	init() {
@@ -52,7 +52,6 @@ export default class Test extends JetView {
 			this.formComponent.clear();
 			webix.ajax().get(`http://localhost:3000/wordsForTest/${id}`).then((data) => {
 				this.dataForForm = data.json();
-				console.log("this.dataForForm", this.dataForForm);
 				this.formComponent.setValues(this.dataForForm[0]);
 			});
 		});
@@ -60,12 +59,12 @@ export default class Test extends JetView {
 		this.app.attachEvent("onShowNext", (currentPressing, testResult) => {
 			if (currentPressing < this.dataForForm.length) {
 				this.formComponent.setValues(this.dataForForm[currentPressing]);
-			} else {
+			}
+			else {
 				this.formComponent.hide();
 				this.templateComponent.show();
-				console.log("result", testResult);
 				let selectedGroupId = this.listComponent.getSelectedId();
-				webix.ajax().post(`http://localhost:3000/getResult`, {testResult: testResult, groupId: selectedGroupId}).then((point) => {
+				webix.ajax().post("http://localhost:3000/getResult", {testResult, groupId: selectedGroupId}).then((point) => {
 					let pointForClient = point.json();
 					this.templateComponent.parse(pointForClient);
 					let currentDate = new Date().toISOString().slice(0, 10);
@@ -74,12 +73,10 @@ export default class Test extends JetView {
 						date: currentDate,
 						wordGroup: selectedGroupId
 					};
-					webix.ajax().post("http://localhost:3000/setResult", resutTestForServer).then((result) => {
-						console.log(result);
-					});
+					webix.ajax().post("http://localhost:3000/setResult", resutTestForServer);
 				});
 			}
-		})
+		});
 	}
 
 	clickOnTest(id) {
@@ -90,9 +87,7 @@ export default class Test extends JetView {
 			wordInEnglish: englishWord
 		};
 		this.testResult.push(result);
-		//console.log(this.testResult);
 		this.click += 1;
-		console.log("click", this.click);
 		this.app.callEvent("onShowNext", [this.click, this.testResult]);
 	}
-};
+}

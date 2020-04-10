@@ -35,7 +35,7 @@ export default class Words extends JetView {
 				{
 					cols: [
 						{view: "button", value: "Add Group", click: () => this.addGroup()},
-						{view: "button", localId: "btnExcel", value: "Export to excel", click: () => this.exportToExcel(), disabled: true},
+						{view: "button", localId: "btnExcel", value: "Export to excel", click: () => this.exportToExcel(), disabled: true}
 					]
 				},
 				{
@@ -75,7 +75,7 @@ export default class Words extends JetView {
 					disabled: true
 				}
 			]
-		}
+		};
 	}
 
 	init() {
@@ -144,4 +144,4 @@ export default class Words extends JetView {
 			filename: selectedGroupItem.groupName
 		});
 	}
-};
+}
