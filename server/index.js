@@ -17,10 +17,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(cors());
-app.use("/", userRouter);
-app.use("/", wordGroupRouter);
-app.use("/", wordRouter);
-app.use("/", testResultRouter);
+app.use("/users", userRouter);
+app.use("/wordGroups", wordGroupRouter);
+app.use("/words", wordRouter);
+app.use("/testResults", testResultRouter);
 
 const url = "mongodb://0.0.0.0:27017/Translator";
 

@@ -54,7 +54,7 @@ export default class Test extends JetView {
 			this.formComponent.show();
 			this.templateComponent.hide();
 			this.formComponent.clear();
-			webix.ajax().get(`http://localhost:3000/wordsForTest/${id}`).then((data) => {
+			webix.ajax().get(`http://localhost:3000/words/cardsForTest/${id}`).then((data) => {
 				this.dataForTest = data.json();
 				this.formComponent.setValues(this.dataForTest[this.click]);
 			});
@@ -78,7 +78,7 @@ export default class Test extends JetView {
 			this.formComponent.hide();
 			this.templateComponent.show();
 			let selectedGroupId = this.listComponent.getSelectedId();
-			webix.ajax().post("http://localhost:3000/getResult", {testResult: this.testResult, groupId: selectedGroupId}).then((point) => {
+			webix.ajax().post("http://localhost:3000/words/result", {testResult: this.testResult, groupId: selectedGroupId}).then((point) => {
 				let pointForClient = point.json();
 				this.templateComponent.parse(pointForClient);
 				let currentDate = new Date().toISOString().slice(0, 10);
@@ -87,7 +87,7 @@ export default class Test extends JetView {
 					date: currentDate,
 					wordGroup: selectedGroupId
 				};
-				webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/setResult", resutTestForServer);
+				webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/testResults/addResult", resutTestForServer);
 			});
 		}
 	}

@@ -6,7 +6,7 @@ const ObjectId = require("mongodb").ObjectID;
 
 const router = express.Router();
 
-router.get("/results", (req, res) => {
+router.get("/", (req, res) => {
 	let userToken = req.headers.auth;
 	let userId = AuthManager.getCurrentUser(userToken);
 	TestResults.aggregate([
@@ -38,7 +38,7 @@ router.get("/results", (req, res) => {
 	});
 });
 
-router.post("/setResult", (req, res, next) => {
+router.post("/addResult", (req, res, next) => {
 	let userToken = req.headers.auth;
 	let userId = AuthManager.getCurrentUser(userToken);
 	TestResults.create({

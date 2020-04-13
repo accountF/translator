@@ -20,7 +20,7 @@ export default class TestResult extends JetView {
 		let token = webix.storage.local.get("token");
 		webix.ajax().headers({
 			Auth: token
-		}).get("http://localhost:3000/results").then((results) => {
+		}).get("http://localhost:3000/testResults").then((results) => {
 			this.tableComponent.parse(results);
 		});
 	}

@@ -44,14 +44,14 @@ export default class TopView extends JetView {
 									label: _("Sign in"),
 									width: 200,
 									css: "webix_primary",
-									click: () => this.signIn()
+									click: () => this.showAuthWindow("Sign in")
 								},
 								{
 									view: "button",
 									label: _("Sign up"),
 									width: 200,
 									css: "webix_primary",
-									click: () => this.signUp()
+									click: () => this.showAuthWindow("Sign up")
 								}
 							]
 						},
@@ -114,7 +114,7 @@ export default class TopView extends JetView {
 		if (token) {
 			webix.ajax().headers({
 				Auth: token
-			}).get("http://localhost:3000/getUser").then((userInfo) => {
+			}).get("http://localhost:3000/users").then((userInfo) => {
 				let userInfoToJson = userInfo.json();
 				if (userInfoToJson) {
 					this.knownUser(userInfoToJson);
@@ -161,12 +161,8 @@ export default class TopView extends JetView {
 		this.menuComponent.toggle();
 	}
 
-	signIn() {
-		this.window.showWindow(this._("Sign in"));
-	}
-
-	signUp() {
-		this.window.showWindow(this._("Sign up"));
+	showAuthWindow(windowType) {
+		this.window.showWindow(windowType);
 	}
 
 	logOut() {
