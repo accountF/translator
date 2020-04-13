@@ -54,31 +54,9 @@ export default class Test extends JetView {
 			this.templateComponent.hide();
 			this.formComponent.clear();
 			webix.ajax().get(`http://localhost:3000/wordsForTest/${id}`).then((data) => {
-				this.dataForForm = data.json();
-				this.formComponent.setValues(this.dataForForm[0]);
+				this.dataForTest = data.json();
+				this.formComponent.setValues(this.dataForTest[this.click]);
 			});
-		});
-
-		this.app.attachEvent("onShowNext", (currentPressing, testResult) => {
-			if (currentPressing < this.dataForForm.length) {
-				this.formComponent.setValues(this.dataForForm[currentPressing]);
-			}
-			else {
-				this.formComponent.hide();
-				this.templateComponent.show();
-				let selectedGroupId = this.listComponent.getSelectedId();
-				webix.ajax().post("http://localhost:3000/getResult", {testResult, groupId: selectedGroupId}).then((point) => {
-					let pointForClient = point.json();
-					this.templateComponent.parse(pointForClient);
-					let currentDate = new Date().toISOString().slice(0, 10);
-					let resutTestForServer = {
-						result: pointForClient.point,
-						date: currentDate,
-						wordGroup: selectedGroupId
-					};
-					webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/setResult", resutTestForServer);
-				});
-			}
 		});
 	}
 
@@ -91,6 +69,25 @@ export default class Test extends JetView {
 		};
 		this.testResult.push(result);
 		this.click += 1;
-		this.app.callEvent("onShowNext", [this.click, this.testResult]);
+
+		if (this.click < this.dataForTest.length) {
+			this.formComponent.setValues(this.dataForTest[this.click], true);
+		}
+		else {
+			this.formComponent.hide();
+			this.templateComponent.show();
+			let selectedGroupId = this.listComponent.getSelectedId();
+			webix.ajax().post("http://localhost:3000/getResult", {testResult: this.testResult, groupId: selectedGroupId}).then((point) => {
+				let pointForClient = point.json();
+				this.templateComponent.parse(pointForClient);
+				let currentDate = new Date().toISOString().slice(0, 10);
+				let resutTestForServer = {
+					result: pointForClient.point,
+					date: currentDate,
+					wordGroup: selectedGroupId
+				};
+				webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/setResult", resutTestForServer);
+			});
+		}
 	}
 }
