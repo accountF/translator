@@ -1,0 +1,4 @@
+{"_id":{"$oid":"5e8e3818e145d61726e2bfdc"},"groupName":"Animal","date":"2020-04-08","userId":{"$oid":"5e9086c187ead92ccd02dfd4"}}
+{"_id":{"$oid":"5e8e3b5aa1881116827d5afa"},"groupName":"Day","date":"2020-04-08","userId":{"$oid":"5e9086c187ead92ccd02dfd4"}}
+{"_id":{"$oid":"5e8eeb375c03861b4fe179a8"},"groupName":"Season","date":"2020-04-09","userId":{"$oid":"5e91c4a923ae9a356aa23426"}}
+{"_id":{"$oid":"5e8f5db797f09322bccd940f"},"groupName":"different part of speech","date":"2020-04-09","userId":{"$oid":"5e91c4a923ae9a356aa23426"}}

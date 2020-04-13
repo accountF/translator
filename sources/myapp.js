@@ -1,4 +1,4 @@
-import {JetApp, EmptyRouter, HashRouter} from "webix-jet";
+import {JetApp, EmptyRouter, HashRouter, plugins} from "webix-jet";
 import "./styles/app.css";
 
 export default class MyApp extends JetApp {
@@ -8,7 +8,7 @@ export default class MyApp extends JetApp {
 			version: VERSION,
 			router: BUILD_AS_MODULE ? EmptyRouter : HashRouter,
 			debug: !PRODUCTION,
-			start: "/top/start"
+			start: "/top/words"
 		};
 
 		super({...defaults, ...config});
@@ -16,5 +16,15 @@ export default class MyApp extends JetApp {
 }
 
 if (!BUILD_AS_MODULE) {
-	webix.ready(() => new MyApp().render());
+	webix.ready(() => {
+		let app = new MyApp();
+		app.render();
+		app.use(plugins.Locale, {
+			lang: "en",
+			storage: webix.storage.local,
+			webix: {
+				en: "en-US",
+				ru: "ru-RU"
+			}});
+	});
 }
