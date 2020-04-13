@@ -1,0 +1,9 @@
+{"_id":{"$oid":"5e91d5d071f16f366e0e9de8"},"userId":{"$oid":"5e91c4a923ae9a356aa23426"},"result":"13","date":"2020-04-11","wordGroupId":{"$oid":"5e8f5db797f09322bccd940f"}}
+{"_id":{"$oid":"5e91eb8a60c45d3819cbb7bd"},"userId":{"$oid":"5e9086c187ead92ccd02dfd4"},"result":"20","date":"2020-04-11","wordGroupId":{"$oid":"5e8e3818e145d61726e2bfdc"}}
+{"_id":{"$oid":"5e91edc6f3c12038528183c9"},"userId":{"$oid":"5e91c4a923ae9a356aa23426"},"result":"12","date":"2020-04-11","wordGroupId":{"$oid":"5e8f5db797f09322bccd940f"}}
+{"_id":{"$oid":"5e9211ca565af639ec2a0bfa"},"userId":{"$oid":"5e9086c187ead92ccd02dfd4"},"result":"12","date":"2020-04-11","wordGroupId":{"$oid":"5e8e3b5aa1881116827d5afa"}}
+{"_id":{"$oid":"5e9212f9565af639ec2a0bfb"},"userId":{"$oid":"5e91c4a923ae9a356aa23426"},"result":"11","date":"2020-04-11","wordGroupId":{"$oid":"5e8f5db797f09322bccd940f"}}
+{"_id":{"$oid":"5e92133f565af639ec2a0bfd"},"userId":{"$oid":"5e9086c187ead92ccd02dfd4"},"result":"4","date":"2020-04-11","wordGroupId":{"$oid":"5e8e3b5aa1881116827d5afa"}}
+{"_id":{"$oid":"5e921345565af639ec2a0bfe"},"userId":{"$oid":"5e9086c187ead92ccd02dfd4"},"result":"6","date":"2020-04-11","wordGroupId":{"$oid":"5e8e3b5aa1881116827d5afa"}}
+{"_id":{"$oid":"5e941dff3e97503fbcaef150"},"userId":{"$oid":"5e9086c187ead92ccd02dfd4"},"result":"4","date":"2020-04-13","wordGroupId":{"$oid":"5e8e3b5aa1881116827d5afa"}}
+{"_id":{"$oid":"5e9426213d72bb40c855087a"},"userId":{"$oid":"5e9086c187ead92ccd02dfd4"},"result":"10","date":"2020-04-13","wordGroupId":{"$oid":"5e8e3b5aa1881116827d5afa"}}
