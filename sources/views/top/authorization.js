@@ -69,7 +69,6 @@ export default class Authorization extends JetView {
 		webix.ajax().post("http://localhost:3000/signIn", userData).then((data) => {
 			let result = data.json();
 			if (result) {
-				webix.message(`${result.userLogin} success`);
 				this.closeWindow();
 				this.app.callEvent("onUserLogIn", [result]);
 			}
@@ -84,11 +83,10 @@ export default class Authorization extends JetView {
 			webix.ajax().post("http://localhost:3000/signUp", userData).then((data) => {
 				let result = data.text();
 				if (result) {
-					webix.message(`${result} successful log up`);
 					this.closeWindow();
 				}
 				else {
-					webix.message("User existed");
+					webix.message("Login existed");
 				}
 			});
 		}

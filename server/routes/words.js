@@ -16,7 +16,7 @@ router.get("/words/:id", (req, res) => {
 				id: "$_id",
 				wordInEnglish: 1,
 				wordInRussian: 1,
-				partOfSpeech: 1,
+				partOfSpeech: 1
 			}
 		}
 	]).then((words) => {
@@ -42,7 +42,6 @@ router.get("/wordsForTest/:id", (req, res) => {
 			card.wordInRussian = word.wordInRussian;
 			card.wordsInEnglish = [];
 			card.wordsInEnglish.push(word.wordInEnglish);
-
 			promises.push(Words.aggregate([
 				{
 					$match: {
@@ -59,15 +58,12 @@ router.get("/wordsForTest/:id", (req, res) => {
 				});
 				cards.push(card);
 			}));
-
 		});
 		Promise.all(promises).then(() => {
 			let cardForClient = [];
 			cards.map((card) => {
 				let result = {};
-				card.wordsInEnglish.sort(function () {
-					return Math.random() - 0.5;
-				});
+				card.wordsInEnglish.sort(() => Math.random() - 0.5);
 
 				card.wordsInEnglish.map((wordInEnglish, index) => {
 					result[`version${index}`] = wordInEnglish;
@@ -88,12 +84,11 @@ router.post("/words", (req, res, next) => {
 			wordInEnglish: word.wordInEnglish,
 			wordInRussian: word.wordInRussian
 		};
-		console.log(result);
 		res.send(result);
 	}).catch(next);
 });
 
-router.post("/getResult", (req, res, next) => {
+router.post("/getResult", (req, res) => {
 	let point = 0;
 	let promises = [];
 	req.body.testResult = JSON.parse(req.body.testResult);
@@ -105,23 +100,22 @@ router.post("/getResult", (req, res, next) => {
 		}).then((word) => {
 			if (word) {
 				if (word.partOfSpeech.toLowerCase() === "verb" || word.partOfSpeech.toLowerCase() === "noun") {
-					point = point + 2;
-				} else {
+					point += 2;
+				}
+				else {
 					point++;
 				}
 			}
 		}));
 	});
 	Promise.all(promises).then(() => {
-		console.log(point);
-		res.send({point: point});
+		res.send({point});
 	});
 });
 
 router.put("/words/:id", (req, res) => {
 	Words.findByIdAndUpdate({_id: req.params.id}, req.body).then(() => {
 		Words.findOne({_id: req.params.id}).then((word) => {
-			console.log(word);
 			res.send(word);
 		});
 	});

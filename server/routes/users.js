@@ -2,8 +2,11 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/users");
+const AuthManager = require("../authManager");
 
 const router = express.Router();
+
+const ObjectId = require("mongodb").ObjectID;
 
 router.get("/users", (req, res) => {
 	Users.find({}).then((users) => {
@@ -11,10 +14,10 @@ router.get("/users", (req, res) => {
 	});
 });
 
-router.post("/signIn", (req, res, next) => {
+router.post("/signIn", (req, res) => {
 	Users.findOne({login: req.body.login}).then((user) => {
 		if (!user) {
-			res.status(401).json("User doesn't exist");
+			res.send();
 			return;
 		}
 		bcrypt.compare(req.body.password, user.password, (err, result) => {
@@ -25,10 +28,12 @@ router.post("/signIn", (req, res, next) => {
 				const token = jwt.sign(user._id.toString(), "ne vsem");
 				let userInfoForClient = {
 					userLogin: user.login,
-					token: token
+					token
 				};
+				AuthManager.startSession(user._id, token);
 				res.send(userInfoForClient);
-			} else {
+			}
+			else {
 				res.json({success: false, message: "passwords don't match"});
 			}
 		});
@@ -39,20 +44,34 @@ router.post("/signUp", (req, res, next) => {
 	Users.findOne({login: req.body.login}).then((user) => {
 		if (user) {
 			res.send();
-		} else {
+		}
+		else {
 			let userRecord = {};
 			userRecord.login = req.body.login;
 
-			bcrypt.genSalt(10, function (err, salt) {
+			bcrypt.genSalt(10, (err, salt) => {
 				bcrypt.hash(req.body.password, salt, (err, hash) => {
 					userRecord.password = hash;
 					Users.create(userRecord).then((user) => {
-						res.sendStatus(200);
+						res.send(user.login);
 					}).catch(next);
 				});
 			});
 		}
 	}).catch(next);
+});
+
+router.get("/getUser", (req, res) => {
+	let userToken = req.headers.auth;
+	let userId = AuthManager.getCurrentUser(userToken);
+	Users.findOne({_id: ObjectId(userId)}).then((user) => {
+		if (user) {
+			let result = {userLogin: user.login};
+			res.send(result);
+			return;
+		}
+		res.send();
+	});
 });
 
 module.exports = router;

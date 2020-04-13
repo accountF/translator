@@ -5,6 +5,7 @@ const userRouter = require("./routes/users");
 const wordGroupRouter = require("./routes/wordGroups");
 const wordRouter = require("./routes/words");
 const testResultRouter = require("./routes/testResults");
+const cookieParser = require("cookie-parser");
 
 const mongoose = require("mongoose");
 
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+app.use(cookieParser());
 app.use(cors());
 app.use("/", userRouter);
 app.use("/", wordGroupRouter);

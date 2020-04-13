@@ -16,6 +16,11 @@ export default class TestResult extends JetView {
 
 	init() {
 		this.tableComponent = this.$$("resultTable");
-		this.tableComponent.load("http://localhost:3000/results");
+		let token = webix.storage.local.get("token");
+		webix.ajax().headers({
+			Auth: token
+		}).get("http://localhost:3000/results").then((results) => {
+			this.tableComponent.parse(results);
+		});
 	}
 }

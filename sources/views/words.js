@@ -35,7 +35,13 @@ export default class Words extends JetView {
 				{
 					cols: [
 						{view: "button", value: "Add Group", click: () => this.addGroup()},
-						{view: "button", localId: "btnExcel", value: "Export to excel", click: () => this.exportToExcel(), disabled: true}
+						{
+							view: "button",
+							localId: "btnExcel",
+							value: "Export to excel",
+							click: () => this.exportToExcel(),
+							disabled: true
+						}
 					]
 				},
 				{
@@ -81,7 +87,11 @@ export default class Words extends JetView {
 	init() {
 		this.groupsTable = this.$$("wordGroupsTable");
 		this.wordsTable = this.$$("wordsTable");
-		this.groupsTable.load("http://localhost:3000/wordGroups");
+
+		this.token = webix.storage.local.get("token");
+		webix.ajax().headers({Auth: this.token}).get("http://localhost:3000/wordGroups").then((wordGroups) => {
+			this.groupsTable.parse(wordGroups);
+		});
 
 		this.groupsTable.attachEvent("onAfterSelect", (id) => {
 			webix.ajax().get(`http://localhost:3000/words/${id}`).then((data) => {
@@ -108,7 +118,9 @@ export default class Words extends JetView {
 
 		this.on(this.app, "onWordChange", (word) => {
 			if (word) {
-				this.groupsTable.load("http://localhost:3000/wordGroups");
+				webix.ajax().headers({Auth: this.token}).get("http://localhost:3000/wordGroups").then((wordGroups) => {
+					this.groupsTable.parse(wordGroups);
+				});
 			}
 		});
 	}
@@ -119,7 +131,7 @@ export default class Words extends JetView {
 			groupName: "New Group",
 			date: currentDate
 		};
-		webix.ajax().post("http://localhost:3000/wordGroups", newGroup).then((data) => {
+		webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/wordGroups", newGroup).then((data) => {
 			this.groupsTable.add(data.json(), 0);
 		});
 	}

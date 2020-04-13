@@ -1,10 +1,18 @@
 const express = require("express");
 const TestResults = require("../models/testResults");
+const AuthManager = require("../authManager");
+
+const ObjectId = require("mongodb").ObjectID;
 
 const router = express.Router();
 
 router.get("/results", (req, res) => {
+	let userToken = req.headers.auth;
+	let userId = AuthManager.getCurrentUser(userToken);
 	TestResults.aggregate([
+		{
+			$match: {userId: ObjectId(userId)}
+		},
 		{
 			$lookup: {
 				from: "wordgroups",
@@ -31,7 +39,14 @@ router.get("/results", (req, res) => {
 });
 
 router.post("/setResult", (req, res, next) => {
-	TestResults.create(req.body).then((result) => {
+	let userToken = req.headers.auth;
+	let userId = AuthManager.getCurrentUser(userToken);
+	TestResults.create({
+		userId,
+		result: req.body.result,
+		date: req.body.date,
+		wordGroupId: req.body.wordGroup
+	}).then((result) => {
 		res.send(result);
 	}).catch(next);
 });
