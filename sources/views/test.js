@@ -2,11 +2,12 @@ import {JetView} from "webix-jet";
 
 export default class Test extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			cols: [
 				{
 					rows: [
-						{view: "template", template: "Select group please", type: "header"},
+						{view: "template", template: _("Select group please"), type: "header"},
 						{
 							view: "list",
 							localId: "groupList",
@@ -29,7 +30,7 @@ export default class Test extends JetView {
 						{
 							view: "template",
 							localId: "endOfTest",
-							template: "Test Completed! #point# points!",
+							template: `${_("Test Completed")}! #point# ${_("points")}!`,
 							type: "header",
 							hidden: true
 						}

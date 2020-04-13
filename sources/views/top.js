@@ -3,6 +3,7 @@ import authorization from "./top/authorization";
 
 export default class TopView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			rows: [
 				{
@@ -13,10 +14,22 @@ export default class TopView extends JetView {
 							view: "icon", icon: "mdi mdi-menu", click: () => this.toggleSidebar()
 						},
 						{
-							view: "label", label: "Translator"
+							view: "label", label: _("Translator")
 						},
 						{
-							template: "Please sign in or sign up",
+							view: "radio",
+							localId: "language",
+							value: this.app.getService("locale").getLang(),
+							options: [
+								{id: "en", value: _("English")},
+								{id: "ru", value: _("Russian")}
+							],
+							click: () => {
+								this.toggleLanguage();
+							}
+						},
+						{
+							template: _("Sign in or sign up"),
 							localId: "msgForUnknownUser",
 							css: "user-login",
 							hidden: true,
@@ -28,17 +41,17 @@ export default class TopView extends JetView {
 							cols: [
 								{
 									view: "button",
-									label: "Sign in",
-									width: 150,
+									label: _("Sign in"),
+									width: 200,
 									css: "webix_primary",
-									click: () => this.logIn()
+									click: () => this.signIn()
 								},
 								{
 									view: "button",
-									label: "Sign up",
-									width: 150,
+									label: _("Sign up"),
+									width: 200,
 									css: "webix_primary",
-									click: () => this.logUp()
+									click: () => this.signUp()
 								}
 							]
 						},
@@ -48,13 +61,13 @@ export default class TopView extends JetView {
 							cols: [
 								{
 									localId: "userLogin",
-									template: "User login: #login#",
+									template: `${_("User login")}: #login#`,
 									css: "user-login",
 									borderless: true
 								},
 								{
 									view: "button",
-									label: "Log out",
+									label: _("Log out"),
 									width: 150,
 									css: "webix_primary",
 									click: () => this.logOut()
@@ -71,12 +84,12 @@ export default class TopView extends JetView {
 							view: "sidebar",
 							localId: "menu",
 							data: [
-								{id: "words", icon: "mdi mdi-table-edit", value: "Words"},
-								{id: "test", icon: "mdi mdi-clipboard-text-outline", value: "Test"},
+								{id: "words", icon: "mdi mdi-table-edit", value: _("Words")},
+								{id: "test", icon: "mdi mdi-clipboard-text-outline", value: _("Test")},
 								{
 									id: "testResult",
 									icon: "mdi mdi-table-large",
-									value: "Test result"
+									value: _("Test result")
 								}
 							]
 						},
@@ -88,6 +101,7 @@ export default class TopView extends JetView {
 	}
 
 	init(view, url) {
+		this._ = this.app.getService("locale")._;
 		this.menuComponent = this.$$("menu");
 		this.mainRow = this.$$("cell");
 		this.messageForUnknownUser = this.$$("msgForUnknownUser");
@@ -114,7 +128,7 @@ export default class TopView extends JetView {
 			this.unknownUser();
 		}
 
-		this.on(this.app, "onUserLogIn", (userInfo) => {
+		this.on(this.app, "onUserSignIn", (userInfo) => {
 			window.location.reload(true);
 			this.knownUser(userInfo);
 			webix.storage.local.put("token", userInfo.token);
@@ -147,16 +161,22 @@ export default class TopView extends JetView {
 		this.menuComponent.toggle();
 	}
 
-	logIn() {
-		this.window.showWindow("Sign in");
+	signIn() {
+		this.window.showWindow(this._("Sign in"));
 	}
 
-	logUp() {
-		this.window.showWindow("Sign up");
+	signUp() {
+		this.window.showWindow(this._("Sign up"));
 	}
 
 	logOut() {
 		this.unknownUser();
 		webix.storage.local.remove("token");
+	}
+
+	toggleLanguage() {
+		const langs = this.app.getService("locale");
+		const value = this.$$("language").getValue();
+		langs.setLang(value);
 	}
 }

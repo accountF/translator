@@ -2,6 +2,7 @@ import {JetView} from "webix-jet";
 
 export default class Authorization extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			view: "window",
 			localId: "authorizationWindow",
@@ -12,7 +13,7 @@ export default class Authorization extends JetView {
 					{
 						view: "icon",
 						icon: "wxi-close",
-						tooltip: "Close window",
+						tooltip: _("Close window"),
 						click: () => this.closeWindow()
 					}
 				]
@@ -22,10 +23,10 @@ export default class Authorization extends JetView {
 				localId: "userDataForm",
 				elements: [
 					{view: "text", name: "formType", localId: "formType", hidden: true},
-					{view: "text", label: "Login", name: "login", labelWidth: 150, width: 400, invalidMessage: "Login can not be empty"},
-					{view: "text", label: "Password", name: "password", labelWidth: 150, width: 400, invalidMessage: "Password can not be empty"},
-					{view: "text", localId: "repeatedPassword", label: "Repeat password", name: "repeatedPassword", labelWidth: 150, invalidMessage: "Repeated password can not be empty"},
-					{view: "button", localId: "formButton", value: "Sign in", click: () => this.signInOrSignUp()}
+					{view: "text", label: _("Login"), name: "login", labelWidth: 150, width: 400, invalidMessage: "Login can not be empty"},
+					{view: "text", label: _("Password"), name: "password", labelWidth: 150, width: 400, invalidMessage: "Password can not be empty"},
+					{view: "text", localId: "repeatedPassword", label: _("Repeat password"), name: "repeatedPassword", labelWidth: 150, invalidMessage: "Repeated password can not be empty"},
+					{view: "button", localId: "formButton", value: _("Sign in"), click: () => this.signInOrSignUp()}
 				],
 				rules: {
 					login: webix.rules.isNotEmpty,
@@ -46,14 +47,14 @@ export default class Authorization extends JetView {
 
 	showWindow(action) {
 		this.$$("windowHeader").setValues({nameForm: action});
-		if (action === "Sign in") {
+		if (action === "Sign in" || action === "Войти") {
 			this.repeatPasswordInput.hide();
-			this.formTypeInput.setValue(action);
+			this.formTypeInput.setValue("Sign in");
 			this.buttonComponent.setValue(action);
 		}
-		else if (action === "Sign up") {
+		else if (action === "Sign up" || action === "Зарегистрироваться") {
 			this.repeatPasswordInput.show();
-			this.formTypeInput.setValue(action);
+			this.formTypeInput.setValue("Sign up");
 			this.buttonComponent.setValue(action);
 		}
 		this.getRoot().show();
@@ -70,7 +71,7 @@ export default class Authorization extends JetView {
 			let result = data.json();
 			if (result) {
 				this.closeWindow();
-				this.app.callEvent("onUserLogIn", [result]);
+				this.app.callEvent("onUserSignIn", [result]);
 			}
 			else {
 				webix.message("Sign up please or check your data");

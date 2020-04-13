@@ -2,6 +2,7 @@ import {JetView} from "webix-jet";
 
 export default class Words extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			rows: [
 				{
@@ -12,21 +13,21 @@ export default class Words extends JetView {
 					columns: [
 						{
 							id: "groupName",
-							header: "Groups name",
+							header: _("Groups name"),
 							fillspace: true,
 							sort: "string",
 							editor: "text"
 						},
 						{
 							id: "date",
-							header: "Date",
+							header: _("Date"),
 							width: 150,
 							sort: "string",
 							format: webix.i18n.longDateFormatStr
 						},
 						{
 							id: "numberOfWords",
-							header: "Number of words",
+							header: _("Number of words"),
 							width: 150,
 							sort: "string"
 						}
@@ -34,11 +35,11 @@ export default class Words extends JetView {
 				},
 				{
 					cols: [
-						{view: "button", value: "Add Group", click: () => this.addGroup()},
+						{view: "button", value: _("Add Group"), click: () => this.addGroup()},
 						{
 							view: "button",
 							localId: "btnExcel",
-							value: "Export to excel",
+							value: _("Export to excel"),
 							click: () => this.exportToExcel(),
 							disabled: true
 						}
@@ -52,21 +53,21 @@ export default class Words extends JetView {
 					columns: [
 						{
 							id: "wordInEnglish",
-							header: "Word in english",
+							header: _("Word in english"),
 							fillspace: true,
 							sort: "string",
 							editor: "text"
 						},
 						{
 							id: "wordInRussian",
-							header: "Word in russian",
+							header: _("Word in russian"),
 							fillspace: true,
 							sort: "string",
 							editor: "text"
 						},
 						{
 							id: "partOfSpeech",
-							header: "Part of speech",
+							header: _("Part of speech"),
 							width: 150,
 							sort: "string",
 							editor: "text"
@@ -75,7 +76,7 @@ export default class Words extends JetView {
 				},
 				{
 					view: "button",
-					value: "Add word",
+					value: _("Add word"),
 					localId: "btnAddWord",
 					click: () => this.addWord(),
 					disabled: true
