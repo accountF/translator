@@ -1,77 +1,31 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const Users = require("../models/users");
-const AuthManager = require("../authManager");
+const passport = require("passport");
 
 const router = express.Router();
 
-const ObjectId = require("mongodb").ObjectID;
+router.post("/login", passport.authenticate("local"), (req, res) => {
+	res.send(req.user);
+});
 
-router.get("/users", (req, res) => {
-	Users.find({}).then((users) => {
-		res.send(users);
+router.post("/signUp", async (req, res) => {
+	const hashedPassword = await bcrypt.hash(req.body.password, 10);
+	Users.create({
+		login: req.body.login,
+		password: hashedPassword
+	}).then((user) => {
+		res.send(user.login);
 	});
 });
 
-router.post("/signIn", (req, res) => {
-	Users.findOne({login: req.body.login}).then((user) => {
-		if (!user) {
-			res.send();
-			return;
-		}
-		bcrypt.compare(req.body.password, user.password, (err, result) => {
-			if (err) {
-				console.log(err);
-			}
-			if (result) {
-				const token = jwt.sign(user._id.toString(), "ne vsem");
-				let userInfoForClient = {
-					userLogin: user.login,
-					token
-				};
-				AuthManager.startSession(user._id, token);
-				res.send(userInfoForClient);
-			}
-			else {
-				res.json({success: false, message: "passwords don't match"});
-			}
-		});
-	}).catch(err => res.status(500).json({message: err.message}));
+router.get("/", (req, res) => {
+	res.send(req.user);
 });
 
-router.post("/signUp", (req, res, next) => {
-	Users.findOne({login: req.body.login}).then((user) => {
-		if (user) {
-			res.send();
-		}
-		else {
-			let userRecord = {};
-			userRecord.login = req.body.login;
-
-			bcrypt.genSalt(10, (err, salt) => {
-				bcrypt.hash(req.body.password, salt, (err, hash) => {
-					userRecord.password = hash;
-					Users.create(userRecord).then((user) => {
-						res.send(user.login);
-					}).catch(next);
-				});
-			});
-		}
-	}).catch(next);
-});
-
-router.get("/getUser", (req, res) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
-	Users.findOne({_id: ObjectId(userId)}).then((user) => {
-		if (user) {
-			let result = {userLogin: user.login};
-			res.send(result);
-			return;
-		}
-		res.send();
-	});
+router.get("/logout", (req, res) => {
+	req.logout();
+	res.redirect("/");
 });
 
 module.exports = router;

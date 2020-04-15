@@ -5,7 +5,7 @@ const ObjectId = require("mongodb").ObjectID;
 
 const router = express.Router();
 
-router.get("/words/:id", (req, res) => {
+router.get("/:id", (req, res) => {
 	Words.aggregate([
 		{
 			$match: {wordGroupId: ObjectId(req.params.id)}
@@ -24,7 +24,7 @@ router.get("/words/:id", (req, res) => {
 	});
 });
 
-router.get("/wordsForTest/:id", (req, res) => {
+router.get("/cardsForTest/:id", (req, res) => {
 	let promises = [];
 	Words.aggregate([
 		{
@@ -77,7 +77,7 @@ router.get("/wordsForTest/:id", (req, res) => {
 	});
 });
 
-router.post("/words", (req, res, next) => {
+router.post("/", (req, res, next) => {
 	Words.create(req.body).then((word) => {
 		let result = {
 			id: word._id.toString(),
@@ -88,7 +88,7 @@ router.post("/words", (req, res, next) => {
 	}).catch(next);
 });
 
-router.post("/getResult", (req, res) => {
+router.post("/result", (req, res) => {
 	let point = 0;
 	let promises = [];
 	req.body.testResult = JSON.parse(req.body.testResult);
@@ -113,7 +113,7 @@ router.post("/getResult", (req, res) => {
 	});
 });
 
-router.put("/words/:id", (req, res) => {
+router.put("/:id", (req, res) => {
 	Words.findByIdAndUpdate({_id: req.params.id}, req.body).then(() => {
 		Words.findOne({_id: req.params.id}).then((word) => {
 			res.send(word);

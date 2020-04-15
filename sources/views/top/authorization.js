@@ -47,14 +47,14 @@ export default class Authorization extends JetView {
 
 	showWindow(action) {
 		this.$$("windowHeader").setValues({nameForm: action});
-		if (action === "Sign in" || action === "Войти") {
+		if (action === "Sign in") {
 			this.repeatPasswordInput.hide();
-			this.formTypeInput.setValue("Sign in");
+			this.formTypeInput.setValue(action);
 			this.buttonComponent.setValue(action);
 		}
-		else if (action === "Sign up" || action === "Зарегистрироваться") {
+		else if (action === "Sign up") {
 			this.repeatPasswordInput.show();
-			this.formTypeInput.setValue("Sign up");
+			this.formTypeInput.setValue(action);
 			this.buttonComponent.setValue(action);
 		}
 		this.getRoot().show();
@@ -67,7 +67,7 @@ export default class Authorization extends JetView {
 	}
 
 	signIn(userData) {
-		webix.ajax().post("http://localhost:3000/signIn", userData).then((data) => {
+		webix.ajax().post("http://localhost:3000/users/login", userData).then((data) => {
 			let result = data.json();
 			if (result) {
 				this.closeWindow();
@@ -81,7 +81,7 @@ export default class Authorization extends JetView {
 
 	signUp(userData) {
 		if (userData.password === userData.repeatedPassword) {
-			webix.ajax().post("http://localhost:3000/signUp", userData).then((data) => {
+			webix.ajax().post("http://localhost:3000/users/signUp", userData).then((data) => {
 				let result = data.text();
 				if (result) {
 					this.closeWindow();

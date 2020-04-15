@@ -20,7 +20,7 @@ module.exports = function (env) {
 		},
 		output: {
 			path: path.join(__dirname, "codebase"),
-			publicPath: "/codebase/",
+			publicPath: "server/public/codebase/",
 			filename: "[name].js",
 			chunkFilename: "[name].bundle.js"
 		},

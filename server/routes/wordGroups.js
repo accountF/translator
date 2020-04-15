@@ -1,14 +1,12 @@
 const express = require("express");
 const WordGroups = require("../models/wordGroups");
-const AuthManager = require("../authManager");
 
 const ObjectId = require("mongodb").ObjectID;
 
 const router = express.Router();
 
-router.get("/wordGroups", (req, res) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
+router.get("/", (req, res) => {
+	let userId = req.user._id;
 	WordGroups.aggregate([
 		{
 			$match: {userId: ObjectId(userId)}
@@ -35,9 +33,8 @@ router.get("/wordGroups", (req, res) => {
 	});
 });
 
-router.post("/wordGroups", (req, res, next) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
+router.post("/", (req, res, next) => {
+	let userId = req.user._id;
 	WordGroups.create({
 		userId,
 		groupName: req.body.groupName,
@@ -52,7 +49,7 @@ router.post("/wordGroups", (req, res, next) => {
 	}).catch(next);
 });
 
-router.put("/wordGroups/:id", (req, res) => {
+router.put("/:id", (req, res) => {
 	WordGroups.findByIdAndUpdate({_id: req.params.id}, req.body).then(() => {
 		WordGroups.findOne({_id: req.params.id}).then((wordGroup) => {
 			res.send(wordGroup);

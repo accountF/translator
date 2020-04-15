@@ -44,14 +44,14 @@ export default class TopView extends JetView {
 									label: _("Sign in"),
 									width: 200,
 									css: "webix_primary",
-									click: () => this.signIn()
+									click: () => this.showAuthWindow("Sign in")
 								},
 								{
 									view: "button",
 									label: _("Sign up"),
 									width: 200,
 									css: "webix_primary",
-									click: () => this.signUp()
+									click: () => this.showAuthWindow("Sign up")
 								}
 							]
 						},
@@ -85,7 +85,11 @@ export default class TopView extends JetView {
 							localId: "menu",
 							data: [
 								{id: "words", icon: "mdi mdi-table-edit", value: _("Words")},
-								{id: "test", icon: "mdi mdi-clipboard-text-outline", value: _("Test")},
+								{
+									id: "test",
+									icon: "mdi mdi-clipboard-text-outline",
+									value: _("Test")
+								},
 								{
 									id: "testResult",
 									icon: "mdi mdi-table-large",
@@ -108,30 +112,23 @@ export default class TopView extends JetView {
 		this.btnForUnknownUser = this.$$("inOrUp");
 		this.btnForKnownUser = this.$$("out");
 		this.window = this.ui(authorization);
-		this.menuComponent.select(url[1].page);
+		if (url[1]) {
+			this.menuComponent.select(url[1].page);
+		}
 
-		let token = webix.storage.local.get("token");
-		if (token) {
-			webix.ajax().headers({
-				Auth: token
-			}).get("http://localhost:3000/getUser").then((userInfo) => {
-				let userInfoToJson = userInfo.json();
-				if (userInfoToJson) {
-					this.knownUser(userInfoToJson);
-				}
-				else {
-					this.unknownUser();
-				}
-			});
-		}
-		else {
-			this.unknownUser();
-		}
+
+		webix.ajax().get("http://localhost:3000/users").then((userInfo) => {
+			let userInfoToJson = userInfo.json();
+			if (userInfoToJson) {
+				this.knownUser(userInfoToJson);
+			}
+			else {
+				this.unknownUser();
+			}
+		});
 
 		this.on(this.app, "onUserSignIn", (userInfo) => {
-			window.location.reload(true);
 			this.knownUser(userInfo);
-			webix.storage.local.put("token", userInfo.token);
 		});
 
 		this.menuComponent.attachEvent("onAfterSelect", (newValue) => {
@@ -144,13 +141,17 @@ export default class TopView extends JetView {
 			this.btnForKnownUser.show();
 			this.mainRow.enable();
 			this.messageForUnknownUser.hide();
-			this.$$("userLogin").setValues({login: userInfo.userLogin});
+			this.$$("userLogin").setValues({login: userInfo.login});
 			this.btnForUnknownUser.hide();
 			this.messageForUnknownUser.hide();
 		}
 	}
 
 	unknownUser() {
+		if (window.location.href !== "http://localhost:3000/#!/top") {
+			window.location.href = "http://localhost:3000/#!/top";
+			window.location.reload(true);
+		}
 		this.mainRow.disable();
 		this.btnForUnknownUser.show();
 		this.btnForKnownUser.hide();
@@ -161,17 +162,13 @@ export default class TopView extends JetView {
 		this.menuComponent.toggle();
 	}
 
-	signIn() {
-		this.window.showWindow(this._("Sign in"));
-	}
-
-	signUp() {
-		this.window.showWindow(this._("Sign up"));
+	showAuthWindow(windowType) {
+		this.window.showWindow(windowType);
 	}
 
 	logOut() {
 		this.unknownUser();
-		webix.storage.local.remove("token");
+		webix.ajax().get("http://localhost:3000/users/logout");
 	}
 
 	toggleLanguage() {

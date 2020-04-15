@@ -1,14 +1,12 @@
 const express = require("express");
 const TestResults = require("../models/testResults");
-const AuthManager = require("../authManager");
 
 const ObjectId = require("mongodb").ObjectID;
 
 const router = express.Router();
 
-router.get("/results", (req, res) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
+router.get("/", (req, res) => {
+	let userId = req.user._id;
 	TestResults.aggregate([
 		{
 			$match: {userId: ObjectId(userId)}
@@ -38,9 +36,8 @@ router.get("/results", (req, res) => {
 	});
 });
 
-router.post("/setResult", (req, res, next) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
+router.post("/addResult", (req, res, next) => {
+	let userId = req.user._id;
 	TestResults.create({
 		userId,
 		result: req.body.result,

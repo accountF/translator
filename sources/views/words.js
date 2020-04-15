@@ -89,8 +89,7 @@ export default class Words extends JetView {
 		this.groupsTable = this.$$("wordGroupsTable");
 		this.wordsTable = this.$$("wordsTable");
 
-		this.token = webix.storage.local.get("token");
-		webix.ajax().headers({Auth: this.token}).get("http://localhost:3000/wordGroups").then((wordGroups) => {
+		webix.ajax().get("http://localhost:3000/wordGroups").then((wordGroups) => {
 			this.groupsTable.parse(wordGroups);
 		});
 
@@ -119,7 +118,7 @@ export default class Words extends JetView {
 
 		this.on(this.app, "onWordChange", (word) => {
 			if (word) {
-				webix.ajax().headers({Auth: this.token}).get("http://localhost:3000/wordGroups").then((wordGroups) => {
+				webix.ajax().get("http://localhost:3000/wordGroups").then((wordGroups) => {
 					this.groupsTable.parse(wordGroups);
 				});
 			}
@@ -132,7 +131,7 @@ export default class Words extends JetView {
 			groupName: "New Group",
 			date: currentDate
 		};
-		webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/wordGroups", newGroup).then((data) => {
+		webix.ajax().post("http://localhost:3000/wordGroups", newGroup).then((data) => {
 			this.groupsTable.add(data.json(), 0);
 		});
 	}
