@@ -44,8 +44,7 @@ export default class Test extends JetView {
 		this.listComponent = this.$$("groupList");
 		this.formComponent = this.$$("testForm");
 		this.templateComponent = this.$$("endOfTest");
-		this.token = webix.storage.local.get("token");
-		webix.ajax().headers({Auth: this.token}).get("http://localhost:3000/wordGroups").then((wordGroups) => {
+		webix.ajax().get("http://localhost:3000/wordGroups").then((wordGroups) => {
 			this.listComponent.parse(wordGroups);
 		});
 		this.listComponent.attachEvent("onAfterSelect", (id) => {
@@ -87,7 +86,7 @@ export default class Test extends JetView {
 					date: currentDate,
 					wordGroup: selectedGroupId
 				};
-				webix.ajax().headers({Auth: this.token}).post("http://localhost:3000/testResults/addResult", resutTestForServer);
+				webix.ajax().post("http://localhost:3000/testResults/addResult", resutTestForServer);
 			});
 		}
 	}

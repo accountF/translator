@@ -1,14 +1,12 @@
 const express = require("express");
 const WordGroups = require("../models/wordGroups");
-const AuthManager = require("../authManager");
 
 const ObjectId = require("mongodb").ObjectID;
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
+	let userId = req.user._id;
 	WordGroups.aggregate([
 		{
 			$match: {userId: ObjectId(userId)}
@@ -36,8 +34,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res, next) => {
-	let userToken = req.headers.auth;
-	let userId = AuthManager.getCurrentUser(userToken);
+	let userId = req.user._id;
 	WordGroups.create({
 		userId,
 		groupName: req.body.groupName,
